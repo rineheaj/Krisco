@@ -16,7 +16,10 @@
 {% if entries %}
     <ul>
         {% for entry in entries %}
-            <li>{{ entry }}</li>
+            <li>
+                <strong>{{ entry.name }}</strong><br>
+                {{ entry.message }}
+            </li>
         {% endfor %}
     </ul>
 {% else %}

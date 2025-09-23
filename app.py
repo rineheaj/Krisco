@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
 
 IMAGES_FOLDER = Path(__file__).parent / "static" / "images"
 GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
+
 
 @app.route("/")
 def index():
@@ -35,20 +37,31 @@ def guestbook():
         name = request.form.get("name")
         message = request.form.get("message")
         if name and message:
-            entry = f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
+            entry = (
+                f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
+            )
             GUEST_BOOK.parent.mkdir(parents=True, exist_ok=True)
             with open(GUEST_BOOK, mode="a", encoding="utf-8") as outfile:
                 outfile.write(entry)
             print(f"Guestbook saved to {outfile}")
-        
+
         return redirect(url_for("guestbook"))
-    
+
     entries = []
+    formmed_entries = []
     if GUEST_BOOK.exists():
         with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:
             entries = list(reversed(infile.readlines()))
-    
-    return render_template("guestbook.html", entries=entries)
+
+        for e in entries:
+            target_name = e.split(" | ")[1].split(":")[0].strip()
+            target_message = e.split(" | ")[1].split(":")[1].strip()
+            formmed_entries.append({
+                "name": target_name,
+                "message": target_message
+            })
+
+    return render_template("guestbook.html", entries=formmed_entries)
 
 
 @app.route("/.well-known/appspecific/com.chrome.devtools.json")
@@ -58,17 +71,13 @@ def devtools():
     if "chrome" in ua:
         return "", 204
     else:
-        return jsonify({
-            "status_code": 200,
-            "response_text": "Running in a local environment. This endpoint is for Chrome DevTools."
-        }), 200
+        return jsonify(
+            {
+                "status_code": 200,
+                "response_text": "Running in a local environment. This endpoint is for Chrome DevTools.",
+            }
+        ), 200
 
-
-
-
-
-
-            
 
 if __name__ == "__main__":
     app.run(debug=True)

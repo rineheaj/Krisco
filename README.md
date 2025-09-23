@@ -3,7 +3,7 @@
 A small web app created in memory of my beloved dog, Krisco.
 
 ## About
-Krisco was more than a pet — he was family. This app is a tribute to his life, his joy, and the unconditional love he gave.  
+Krisco was more than a pet, he was family. This app is a tribute to his life, his joy, and the unconditional love he gave.  
 It’s meant to be a place to share memories, photos, and stories, and to keep his spirit alive in a digital space.
 
 ## Features
@@ -19,7 +19,3 @@ This project is both personal and therapeutic, a way to honor Krisco and to conn
 - **Frontend**: HTML, CSS
 - **Storage**: Local file storage for entries and images
 
-## How to Run Locally
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/krisco.git

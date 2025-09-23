@@ -1,0 +1,14 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+show_project_folder.py
+guest_book_with_css.py
+print_picture_filenames.py
+streamlit_app.py

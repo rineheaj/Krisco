@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Guestbook</h2>
+
+<form id="guestbook-form" method="post" style="margin-bottom: 20px;">
+    <label>Name</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Message</label><br>
+    <textarea name="message" rows="4" required></textarea><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<h3>Messages</h3>
+{% if entries %}
+    <ul>
+        {% for entry in entries %}
+            <li>{{ entry }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages yet. Be the first to leave one.</p>
+{% endif %}
+{% endblock %}
+

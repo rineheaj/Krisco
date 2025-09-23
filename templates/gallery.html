@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Photo Gallery</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    {% for img in imgs %}
+    <div style="flex: 1 1 40%; max-width: 400px;">
+        <img src="{{ url_for('static', filename='images/' ~ img) }}" class="memory-photo" alt="Memory" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+        <p style="text-align: center; font-style: italic;">Memory {{ loop.index }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

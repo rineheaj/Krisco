@@ -16,5 +16,5 @@ This project is both personal and therapeutic, a way to honor Krisco and to conn
 ## Tech Stack
 - **Backend**: Flask (Python)
 - **Frontend**: HTML, CSS
-- **Storage**: Local file storage for entries and images
+- **Storage**: Files are stored on the server
 

@@ -1,6 +1,6 @@
 # Krisco 🐾
 
-A small web app created in memory of my beloved dog, Krisco.
+A small web app created in memory of our beloved dog, Krisco.
 
 ## About
 Krisco was more than a pet, he was family. This app is a tribute to his life, his joy, and the unconditional love he gave.  

@@ -21,14 +21,14 @@ def gallery():
     return render_template("gallery.html", imgs=imgs)
 
 
-@app.route("/story")
-def story():
-    return render_template("story.html")
+# @app.route("/story")
+# def story():
+#     return render_template("story.html")
 
 
-@app.route("/messages")
-def messages():
-    return render_template("messages.html")
+# @app.route("/messages")
+# def messages():
+#     return render_template("messages.html")
 
 
 @app.route("/guestbook", methods=["GET", "POST"])

@@ -6,10 +6,12 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "flask>=3.1.2",
+    "pytube>=15.0.0",
     "streamlit>=1.49.1",
 ]
 
 [tool.uv.workspace]
 members = [
     "Krisco_mon",
+    "mini_obsidian",
 ]

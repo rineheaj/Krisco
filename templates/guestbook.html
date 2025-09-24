@@ -14,16 +14,15 @@
 
 <h3>Messages</h3>
 {% if entries %}
-    <ul>
+    <div class="entries">
         {% for entry in entries %}
-            <li>
-                <strong>{{ entry.name }}</strong><br>
-                {{ entry.message }}
-            </li>
+            <div class="entry">
+                <strong>{{ entry.name }}</strong>
+                <p class="message">{{ entry.message }}</p>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>No messages yet. Be the first to leave one.</p>
 {% endif %}
 {% endblock %}
-

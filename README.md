@@ -9,7 +9,6 @@ It’s meant to be a place to share memories, photos, and stories, and to keep h
 ## Features
 - **Guestbook**: Visitors can leave messages, memories, or kind words.
 - **Photo Gallery**: A collection of Krisco’s happiest moments.
-- **Timeline**: Key milestones and cherished events from his life.
 
 ## Purpose
 This project is both personal and therapeutic, a way to honor Krisco and to connect with others who understand the bond between humans and their dogs.

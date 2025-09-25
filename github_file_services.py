@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 def save_guestbook_github(name, message):
-    g = Github(os.getenv["GITHUB_TOKEN"])
-    repo = g.get_repo(os.getenv["GITHUB_REPO"])
+    g = Github(os.getenv("GITHUB_TOKEN"))
+    repo = g.get_repo(os.getenv("GITHUB_REPO"))
     branch = os.environ.get("GITHUB_BRANCH", "main")
 
     try:

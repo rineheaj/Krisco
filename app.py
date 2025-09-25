@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from pathlib import Path
 from datetime import datetime, timedelta
 
-from github_file_services import save_guestbook_github
+from github_file_services import save_guestbook_github, read_guestbook_github
 
 app = Flask(__name__)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
@@ -55,7 +55,7 @@ def guestbook():
 
         return redirect(url_for("guestbook"))
 
-    entries = []
+    entries = read_guestbook_github()
     formmed_entries = []
     if GUEST_BOOK.exists():
         with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:

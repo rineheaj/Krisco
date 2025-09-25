@@ -2,12 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from pathlib import Path
 from datetime import datetime, timedelta
 
+from github_file_services import save_guestbook_github
 
 app = Flask(__name__)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
 
 IMAGES_FOLDER = Path(__file__).parent / "static" / "images"
 GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
+
+
+
+
+
+
 
 
 @app.route("/")
@@ -37,6 +44,7 @@ def guestbook():
         name = request.form.get("name")
         message = request.form.get("message")
         if name and message:
+            save_guestbook_github(name=name, message=message)
             entry = (
                 f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
             )

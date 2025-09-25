@@ -39,8 +39,10 @@ def save_guestbook_github(name, message):
 
 def read_guestbook_github():
     g = Github(os.getenv("GITHUB_TOKEN"))
-    repo = g.get_repo("GITHUB_REPO")
+    repo_name = os.getenv("GITHUB_REPO")
     brnach = os.getenv("GITHUB_BRANCH", "main")
+    repo = g.get_repo(repo_name)
+
     try:
         contents = repo.get_contents("data/guestbook.txt", ref=brnach)
         text = contents.decoded_content.decode("utf-8")
@@ -48,5 +50,4 @@ def read_guestbook_github():
     except Exception as e:
         print(f"Error in read guestbook: {e}\nReturning empty list.")
         return []
-    
     

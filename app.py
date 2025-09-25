@@ -43,13 +43,14 @@ def guestbook():
     if request.method == "POST":
         name = request.form.get("name")
         message = request.form.get("message")
+        safe_message = message.replace("\n", " \\n ")
         if name and message:
             try:
-                save_guestbook_github(name=name, message=message)
+                save_guestbook_github(name=name, message=safe_message)
             except Exception as e:
                 print(f"⚠️ Failed to save to GitHub: {e}")
                 entry = (
-                    f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
+                    f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {safe_message}\n"
                 )
                 GUEST_BOOK.parent.mkdir(parents=True, exist_ok=True)
                 with open(GUEST_BOOK, mode="a", encoding="utf-8") as outfile:
@@ -62,7 +63,7 @@ def guestbook():
     if not entries and GUEST_BOOK.exists():
         with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:
             entries = list(reversed(infile.readlines()))
-            
+
     formmed_entries = []
     for e in entries:
         target_name = e.split(" | ")[1].split(":")[0].strip()

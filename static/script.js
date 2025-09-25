@@ -7,6 +7,18 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player("bg-music", {
     events: {
       onReady: (event) => {
+        if (player.isMuted()) {
+          isMuted = true;
+          localStorage.setItem("musicMuted", "true");
+          document.getElementById("muteBtn").textContent = "🔇 Muted";
+        }
+          else {
+            isMuted = false;
+            localStorage.setItem("musicMuted", "false");
+            document.getElementById("muteBtn").textContent = "🔊 Unmuted";
+          }
+        
+
         if (hasOptedIn) {
           if (savedTime > 0) {
             event.target.seekTo(savedTime, true);

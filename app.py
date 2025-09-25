@@ -44,30 +44,33 @@ def guestbook():
         name = request.form.get("name")
         message = request.form.get("message")
         if name and message:
-            save_guestbook_github(name=name, message=message)
-            entry = (
-                f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
-            )
-            GUEST_BOOK.parent.mkdir(parents=True, exist_ok=True)
-            with open(GUEST_BOOK, mode="a", encoding="utf-8") as outfile:
-                outfile.write(entry)
-            print(f"Guestbook saved to {outfile}")
+            try:
+                save_guestbook_github(name=name, message=message)
+            except Exception as e:
+                print(f"⚠️ Failed to save to GitHub: {e}")
+                entry = (
+                    f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {message}\n"
+                )
+                GUEST_BOOK.parent.mkdir(parents=True, exist_ok=True)
+                with open(GUEST_BOOK, mode="a", encoding="utf-8") as outfile:
+                    outfile.write(entry)
+                print(f"Guestbook saved locally to {outfile}")
 
         return redirect(url_for("guestbook"))
 
     entries = read_guestbook_github()
-    formmed_entries = []
-    if GUEST_BOOK.exists():
+    if not entries and GUEST_BOOK.exists():
         with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:
             entries = list(reversed(infile.readlines()))
-
-        for e in entries:
-            target_name = e.split(" | ")[1].split(":")[0].strip()
-            target_message = e.split(" | ")[1].split(":")[1].strip()
-            formmed_entries.append({
-                "name": target_name,
-                "message": target_message
-            })
+            
+    formmed_entries = []
+    for e in entries:
+        target_name = e.split(" | ")[1].split(":")[0].strip()
+        target_message = e.split(" | ")[1].split(":")[1].strip()
+        formmed_entries.append({
+            "name": target_name,
+            "message": target_message
+        })
 
     return render_template("guestbook.html", entries=formmed_entries)
 

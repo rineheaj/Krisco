@@ -1,4 +1,4 @@
-from github import Github
+from github import Github, GithubException
 import os
 from datetime import datetime
 
@@ -47,6 +47,9 @@ def read_guestbook_github():
         contents = repo.get_contents("data/guestbook.txt", ref=brnach)
         text = contents.decoded_content.decode("utf-8")
         return list(reversed(text.splitlines()))
+    except GithubException as e:
+        print(f"⚠️ Github error: {e}")
+        return []
     except Exception as e:
         print(f"Error in read guestbook: {e}\nReturning empty list.")
         return []

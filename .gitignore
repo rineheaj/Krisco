@@ -14,6 +14,7 @@ print_picture_filenames.py
 streamlit_app.py
 keep_render_alive.py
 load_json_test.py
+local_db_test.py
 keep_render_alive_json.ps1
 keep_render_alive.ps1
 convert_json_to_ndjson.ps1

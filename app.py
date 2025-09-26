@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 from datetime import datetime, timedelta
 import json
@@ -11,11 +12,41 @@ from github_file_services import (
     read_guestbook_json_github,
 )
 
-app = Flask(__name__)
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
 
 IMAGES_FOLDER = Path(__file__).parent / "static" / "images"
+IMAGE_SUFFIXES = {".jpg", ".png", ".jpeg"}
 GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
+
+
+app = Flask(__name__)
+
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+
+db = SQLAlchemy(app)
+
+class Photo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String, unique=True, nullable=False)
+    votes = db.Column(db.Integer, default=0)
+
+with app.app_context():
+    db.create_all()
+
+    for img in IMAGES_FOLDER.iterdir():
+        if img.suffix.lower() in IMAGE_SUFFIXES:
+            is_present = Photo.query.filter_by(filename=img.name).first()
+            if not is_present:
+                db.session.add(Photo(filename=img.name))
+
+    db.session.commit()
+    
+
+
+
+
+
+
 
 
 @app.route("/")
@@ -23,10 +54,21 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/gallery")
-def gallery():
-    imgs = [img.name for img in IMAGES_FOLDER.iterdir() if img.suffix.endswith(".jpg")]
+@app.route("/gallery") 
+def gallery(): 
+    imgs = Photo.query.order_by(Photo.votes.desc()).all()
     return render_template("gallery.html", imgs=imgs)
+
+
+@app.route("/vote/<filename>", methods=["POST"])
+def vote(filename):
+    photo = Photo.query.filter_by(filename=filename).first()
+    if photo:
+        photo.votes += 1
+        db.session.commit()
+    return redirect(url_for("gallery"))
+
+
 
 
 # @app.route("/story")

@@ -1,4 +1,6 @@
 from github import Github, GithubException
+from werkzeug.utils import secure_filename
+import base64
 import os
 from datetime import datetime
 import json
@@ -118,3 +120,43 @@ def read_guestbook_json_github():
     except Exception as e:
         print(f"⚠️ General error while reading file from Github: {e}")
         return []
+
+
+def save_uploaded_image_to_github(file_storage, filename=None):
+    g = Github(os.getenv("GITHUB_TOKEN"))
+    repo_name = os.getenv("GITHUB_REPO")
+    branch = os.getenv("GITHUB_BRANCH", "main")
+    repo = g.get_repo(repo_name)
+
+    if not filename:
+        filename = secure_filename(file_storage.filename)
+    
+    path = f"static/uploads/{filename}"
+
+    file_bytes = file_storage.read()
+    encoded_content = base64.b64encode(file_bytes).decode("utf-8")
+
+    try:
+        contents = repo.get_contents(path, ref=branch)
+        sha = contents.sha
+        repo.update_file(
+            path=path,
+            message=f"Update uploaded image {filename}",
+            content=encoded_content,
+            sha=sha,
+            branch=branch,
+        )
+    except GithubException as e:
+        print(f"❌ Could not find file to update on GitHub, creating a new one. Error message on the next line.\n{e}")
+        repo.create_file(
+            path=path,
+            message=f"Add uploaded image {filename}",
+            content=encoded_content,
+            branch=branch,
+        )
+    
+    file_storage.stream.seek(0)
+
+    return path
+
+

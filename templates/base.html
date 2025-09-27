@@ -24,14 +24,14 @@
     <header>
         <h1>🐾 In Loving Memory</h1>
         <nav>
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('gallery.gallery') }}">Gallery</a>
-            <a href="{{ url_for('upload.upload_file') }}">Upload</a>
-            <a href="{{ url_for('guestbook.guestbook') }}">GuestBook</a>
+            <a href="{{ url_for('index') }}" data-nav>Home</a>
+            <a href="{{ url_for('gallery.gallery') }}" data-nav>Gallery</a>
+            <a href="{{ url_for('upload.upload_file') }}" data-nav>Upload</a>
+            <a href="{{ url_for('guestbook.guestbook') }}" data-nav>GuestBook</a>
         </nav>
     </header>
     
-    <main>
+    <main id="content">
         <!-- Flash messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -52,5 +52,6 @@
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='spa.js') }}"></script>
 </body>
 </html>

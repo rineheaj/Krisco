@@ -3,7 +3,7 @@ import os
 
 from setup_utils.models import db
 from setup_utils.config import Config
-from setup_utils.cli import init_db_command
+from setup_utils.cli import init_db_command, count_photos_command
 from setup_utils.constants import UPLOAD_FOLDER
 from blueprints import all_blueprints
 
@@ -23,6 +23,7 @@ def create_app():
         return render_template("index.html")
 
     app.cli.add_command(init_db_command)
+    app.cli.add_command(count_photos_command)
 
     return app
 

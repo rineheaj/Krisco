@@ -16,3 +16,10 @@ def init_db_command():
                 click.echo(f"🟢 Added {img.name}")
     db.session.commit()
     click.echo("✅ Database is up and images were loaded.")
+
+
+@click.command("count-photos")
+@with_appcontext
+def count_photos_command():
+    count = Photo.query.count()
+    click.echo(f"📷 There are {count} photos in the Render database.")

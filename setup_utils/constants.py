@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 
-IMAGES_FOLDER = Path(__file__).parent / "static" / "images"
+IMAGES_FOLDER = Path(__file__).parent.parent / "static" / "images"
 IMAGE_SUFFIXES = {".jpg", ".png", ".jpeg", ".gif"}
-GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
-UPLOAD_FOLDER = Path(__file__).parent / "static" / "uploads"
+GUEST_BOOK = Path(__file__).parent.parent / "data" / "guestbook.txt"
+UPLOAD_FOLDER = Path(__file__).parent.parent / "static" / "uploads"

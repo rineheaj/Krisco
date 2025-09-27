@@ -1,11 +1,8 @@
 import os
-from pathlib import Path
 from datetime import timedelta
-
+from .constants import UPLOAD_FOLDER
 
 class Config:
-    UPLOAD_FOLDER = Path(__file__).parent / "static" / "uploads"
-
     SEND_FILE_MAX_AGE_DEFAULT = timedelta(days=2)
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     UPLOAD_FOLDER = str(UPLOAD_FOLDER)

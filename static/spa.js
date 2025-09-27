@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const newContent = doc.querySelector("#content");
             if (newContent) {
                 content.innerHTML = newContent.innerHTML;
-                console.log("Updated <main> content");
+                console.log("Injected content:", newContent.innerHTML);
+                console.log("Injected node:", newContent);
             }
 
             const finalURL = res.url;

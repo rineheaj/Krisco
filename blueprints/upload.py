@@ -1,8 +1,7 @@
 import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from werkzeug.utils import secure_filename
-from models import Photo
-from extensions import db
+from models import Photo, db
 from github_file_services import save_uploaded_image_to_github
 
 

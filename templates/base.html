@@ -5,20 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In Loving Memory</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='player-buttons.css') }}">
 </head>
 
 <body>
     <div class="music-section">
-        <button id="playBtn" type="button">▶️ Play Music</button>
-        <button id="muteBtn" type="button">🔇 Mute</button>
-        
-        <div class="video-placeholder" id="videoPlaceholder">
-            🎵 Music is ready to play
+        <div class="music-buttons">
+            <button id="playBtn" type="button">▶️</button>
+            <button id="pauseBtn" type="button">⏸️</button>
+            <button id="muteBtn" type="button">🔇</button>
+            <button id="resetBtn" type="button">⏹</button>
         </div>
-    </div>
+            
+            <div class="video-placeholder" id="videoPlaceholder">
+                🎵 Music is ready to play
+            </div>
+        </div>
     
     <iframe id="bg-music" src="https://www.youtube.com/embed/j6Keg3XKKjM?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media"
-    title="Background music: Hollow Coves - These Memories" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; left: -9999px; top: -9999px;">
+    title="Background music: Hollow Coves - These Memories" style="position: absolute; width: 100px; height: 100px; opacity: 0; pointer-events: auto; left: -200px; top: -200px;">
     </iframe>
     
     <header>

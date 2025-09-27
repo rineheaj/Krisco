@@ -1,40 +1,11 @@
 let player;
-let hasOptedIn = localStorage.getItem("musicPlaying") === "true";
-let isMuted = localStorage.getItem("musicMuted") === "true";
-let savedTime = parseFloat(localStorage.getItem("musicTime")) || 0;
+let playerReady = false;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("bg-music", {
     events: {
-      onReady: (event) => {
-        if (player.isMuted()) {
-          isMuted = true;
-          localStorage.setItem("musicMuted", "true");
-          document.getElementById("muteBtn").textContent = "🔇 Muted";
-        }
-          else {
-            isMuted = false;
-            localStorage.setItem("musicMuted", "false");
-            document.getElementById("muteBtn").textContent = "🔊 Unmuted";
-          }
-        
-
-        if (hasOptedIn) {
-          if (savedTime > 0) {
-            event.target.seekTo(savedTime, true);
-          }
-          if (isMuted) {
-            event.target.mute();
-          }
-          event.target.playVideo();
-        }
-
-
-        setInterval(() => {
-          if (hasOptedIn) {
-            localStorage.setItem("musicTime", player.getCurrentTime());
-          }
-        }, 2000);
+      onReady: () => {
+        playerReady = true;
       }
     }
   });
@@ -42,46 +13,44 @@ function onYouTubeIframeAPIReady() {
 
 document.addEventListener("DOMContentLoaded", () => {
   const playBtn = document.getElementById("playBtn");
+  const pauseBtn = document.getElementById("pauseBtn");
+  const resetBtn = document.getElementById("resetBtn");
   const muteBtn = document.getElementById("muteBtn");
   const placeholder = document.getElementById("videoPlaceholder");
 
-  // --- Initial UI state ---
-  if (hasOptedIn) {
-    playBtn.textContent = "🎵 Music Playing";
-    playBtn.disabled = true;
-    placeholder.textContent = "🎵 Now Playing";
-    placeholder.classList.add("playing");
-  } else {
-    playBtn.textContent = "▶️ Play Music";
-    playBtn.disabled = false;
-    placeholder.textContent = "🎵 Music is ready to play";
-    placeholder.classList.remove("playing");
-  }
-  muteBtn.textContent = isMuted ? "🔇 Muted" : "🔊 Unmuted";
-
-  // --- Play button ---
+  // Start / Play
   playBtn.addEventListener("click", () => {
+    if (!playerReady) return;
     player.playVideo();
-    playBtn.textContent = "🎵 Music Playing";
-    playBtn.disabled = true;
     placeholder.textContent = "🎵 Now Playing";
-    placeholder.classList.add("playing");
-
-    // Mark that the user has opted in
-    hasOptedIn = true;
-    localStorage.setItem("musicPlaying", "true");
+    placeholder.classList.add("playing")
   });
 
-  // --- Mute button ---
+  // Pause
+  pauseBtn.addEventListener("click", () => {
+    if (!playerReady) return;
+    player.pauseVideo();
+    placeholder.textContent = "⏸ Paused";
+    placeholder.classList.remove("playing")
+  });
+
+  // Reset
+  resetBtn.addEventListener("click", () => {
+    if (!playerReady) return;
+    player.stopVideo();
+    placeholder.textContent = "🎵 Music is ready";
+    placeholder.classList.remove("playing")
+  });
+
+  // Mute / Unmute
   muteBtn.addEventListener("click", () => {
+    if (!playerReady) return;
     if (player.isMuted()) {
       player.unMute();
-      isMuted = false;
+      muteBtn.textContent = "🔊";
     } else {
       player.mute();
-      isMuted = true;
+      muteBtn.textContent = "🔇";
     }
-    localStorage.setItem("musicMuted", isMuted);
-    muteBtn.textContent = isMuted ? "🔇 Muted" : "🔊 Unmuted";
   });
 });

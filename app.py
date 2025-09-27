@@ -1,59 +1,30 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.utils import secure_filename
-from pathlib import Path
-from datetime import datetime, timedelta
-import json
+from flask import Flask, render_template
 import os
 
-from models import Photo
-from extensions import db
-from blueprints.gallery import gallery_bp
-from blueprints.upload import upload_bp
-from blueprints.guestbook import guestbook_bp
+from config import Config
+from models import db
+import constants
+from blueprints import all_blueprints
+from cli import init_db_command
 
-from github_file_services import (
-    save_guestbook_github,
-    read_guestbook_github,
-    save_guestbook_github_json,
-    read_guestbook_json_github,
-    save_uploaded_image_to_github
-)
 
-UPLOAD_FOLDER = Path(__file__).parent / "static" / "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-IMAGES_FOLDER = Path(__file__).parent / "static" / "images"
-IMAGE_SUFFIXES = {".jpg", ".png", ".jpeg", ".gif"}
-GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
 
 
 def create_app():
     app = Flask(__name__)
-    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=2)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-    app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change")
-
+    app.config.from_object(Config)
     db.init_app(app)
+    os.makedirs(constants.UPLOAD_FOLDER, exist_ok=True)
 
     # Register blueprints
-    app.register_blueprint(gallery_bp)
-    app.register_blueprint(upload_bp)
-    app.register_blueprint(guestbook_bp)
+    for bp in all_blueprints:
+        app.register_blueprint(bp)
 
     @app.route("/")
     def index():
         return render_template("index.html")
 
-    with app.app_context():
-        db.create_all()
-        for img in IMAGES_FOLDER.iterdir():
-            if img.suffix.lower() in IMAGE_SUFFIXES:
-                if not Photo.query.filter_by(filename=img.name).first():
-                    db.session.add(Photo(filename=img.name))
-                    print(f"🟢 Added {img.name}")
-        db.session.commit()
+    app.cli.add_command(init_db_command)
 
     return app
 

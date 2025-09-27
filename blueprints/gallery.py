@@ -2,11 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for
 from setup_utils.models import Photo, db
 from setup_utils.constants import UPLOAD_FOLDER, IMAGE_SUFFIXES
 
-gallery_bp = Blueprint(
-    "gallery",
-    __name__,
-    url_prefix="/gallery"
-)
+gallery_bp = Blueprint("gallery", __name__, url_prefix="/gallery")
+
 
 def growth_stage(votes: int) -> int:
     if votes:
@@ -19,13 +16,9 @@ def growth_stage(votes: int) -> int:
                 return 2
 
 
-
-
-
 @gallery_bp.app_template_filter("growth_stage")
 def growth_stage_filter(votes: int) -> int:
     return growth_stage(votes)
-
 
 
 @gallery_bp.route("/")
@@ -36,16 +29,8 @@ def gallery():
             folder = "uploads"
         else:
             folder = "images"
-        db_photos.append(
-            {"filename": p.filename, "folder": folder, "votes": p.votes}
-        )
-    
-    # for path in UPLOAD_FOLDER.iterdir():
-    #     if path.suffix.lower() in IMAGE_SUFFIXES:
-    #         uploaded_photos.append(
-    #             {"filename": path.name, "folder": "uploads", "votes": 0}
-    #         )
-    
+        db_photos.append({"filename": p.filename, "folder": folder, "votes": p.votes})
+
     imgs = db_photos
     return render_template("gallery.html", imgs=imgs)
 

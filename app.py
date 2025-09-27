@@ -3,7 +3,7 @@ import os
 
 from setup_utils.models import db
 from setup_utils.config import Config
-from setup_utils.cli import init_db_command, count_photos_command
+from setup_utils.cli import init_db_command, count_photos_command, clean_orphans_command, delete_photo_command
 from setup_utils.constants import UPLOAD_FOLDER
 from blueprints import all_blueprints
 
@@ -24,6 +24,8 @@ def create_app():
 
     app.cli.add_command(init_db_command)
     app.cli.add_command(count_photos_command)
+    app.cli.add_command(delete_photo_command)
+    app.cli.add_command(clean_orphans_command)
 
     return app
 

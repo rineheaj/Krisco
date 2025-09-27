@@ -1,7 +1,7 @@
 import click
 from flask.cli import with_appcontext
 from setup_utils.models import db, Photo
-from setup_utils.constants import IMAGES_FOLDER, IMAGE_SUFFIXES
+from setup_utils.constants import IMAGES_FOLDER, IMAGE_SUFFIXES, UPLOAD_FOLDER
 
 
 
@@ -23,3 +23,31 @@ def init_db_command():
 def count_photos_command():
     count = Photo.query.count()
     click.echo(f"📷 There are {count} photos in the Render database.")
+
+
+@click.command("delete-photo")
+@click.argument("filename")
+@with_appcontext
+def delete_photo_command(filename):
+    photo = Photo.query.filter_by(filename=filename).first()
+    if photo:
+        db.session.delete(photo)
+        db.session.commit()
+        click.echo(f"🗑️ Deleted DB entry for {filename}")
+    else:
+        click.echo(f"⚠️ No DB entry found for {filename}")
+
+
+@click.command("clean-orphans")
+@with_appcontext
+def clean_orphans_command():
+    photos = Photo.query.all()
+    removed = 0
+    for p in photos:
+        in_images = (IMAGES_FOLDER / p.filename).exists()
+        in_uploads = (UPLOAD_FOLDER / p.filename).exists()
+        if not (in_images or in_uploads):
+            db.session.delete(p)
+            removed += 1
+        db.session.commit()
+        click.echo(f"🧹 Removed {removed} orphaned DB entries")

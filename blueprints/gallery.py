@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
-from models import Photo, db
+from setup_utils.models import Photo, db
 
 
 gallery_bp = Blueprint(

@@ -1,11 +1,11 @@
 from flask import Flask, render_template
 import os
 
-from config import Config
-from models import db
-import constants
+from setup_utils.models import db
+from setup_utils.config import Config
+from setup_utils.cli import init_db_command
+from setup_utils.constants import UPLOAD_FOLDER
 from blueprints import all_blueprints
-from cli import init_db_command
 
 
 
@@ -14,7 +14,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
-    os.makedirs(constants.UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
     # Register blueprints
     for bp in all_blueprints:

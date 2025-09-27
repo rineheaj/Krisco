@@ -6,7 +6,7 @@ from flask import (
     redirect,
     url_for
 )
-from github_file_services import (
+from setup_utils.github_file_services import (
     save_guestbook_github,
     read_guestbook_github
 )

@@ -1,7 +1,7 @@
 import click
 from flask.cli import with_appcontext
-from models import db, Photo
-from constants import IMAGES_FOLDER, IMAGE_SUFFIXES
+from setup_utils.models import db, Photo
+from setup_utils.constants import IMAGES_FOLDER, IMAGE_SUFFIXES
 
 
 

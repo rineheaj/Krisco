@@ -28,11 +28,11 @@ def upload_file():
 
         
         filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+        file.stream.seek(0)
         file.save(filepath)
 
-        
-        with open(filepath, "rb") as outfile:
-            save_uploaded_image_to_github(outfile, filename)
+        file.stream.seek(0)
+        save_uploaded_image_to_github(file, filename)
 
         
         if not Photo.query.filter_by(filename=filename).first():

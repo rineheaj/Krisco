@@ -25,6 +25,22 @@ def count_photos_command():
     click.echo(f"📷 There are {count} photos in the Render database.")
 
 
+
+@click.command("rename-photo")
+@click.argument("old_filename")
+@click.argument("new_filename")
+@with_appcontext
+def rename_photo_command(old_filename, new_filename):
+    """Rename a photo's filename in the database."""
+    photo = Photo.query.filter_by(filename=old_filename).first()
+    if photo:
+        photo.filename = new_filename
+        db.session.commit()
+        click.echo(f"✅ Renamed {old_filename} → {new_filename} in DB")
+    else:
+        click.echo(f"⚠️ No DB entry found for {old_filename}")
+
+
 @click.command("delete-photo")
 @click.argument("filename")
 @with_appcontext
@@ -51,3 +67,4 @@ def clean_orphans_command():
             removed += 1
         db.session.commit()
         click.echo(f"🧹 Removed {removed} orphaned DB entries")
+

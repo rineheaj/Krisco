@@ -31,7 +31,8 @@ def upload_file():
         file.save(filepath)
 
         
-        save_uploaded_image_to_github(file, filename)
+        with open(filepath, "rb") as outfile:
+            save_uploaded_image_to_github(outfile, filename)
 
         
         if not Photo.query.filter_by(filename=filename).first():

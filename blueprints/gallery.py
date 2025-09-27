@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for
 from setup_utils.models import Photo, db
-
+from setup_utils.constants import UPLOAD_FOLDER, IMAGE_SUFFIXES
 
 gallery_bp = Blueprint(
     "gallery",
@@ -30,8 +30,24 @@ def growth_stage_filter(votes: int) -> int:
 
 @gallery_bp.route("/")
 def gallery():
-    photos = Photo.query.order_by(Photo.votes.desc())
-    return render_template("gallery.html", imgs=photos)
+    db_photos = []
+    for p in Photo.query.order_by(Photo.votes.desc()).all():
+        if (UPLOAD_FOLDER / p.filename).exists():
+            folder = "uploads"
+        else:
+            folder = "images"
+        db_photos.append(
+            {"filename": p.filename, "folder": folder, "votes": p.votes}
+        )
+    
+    # for path in UPLOAD_FOLDER.iterdir():
+    #     if path.suffix.lower() in IMAGE_SUFFIXES:
+    #         uploaded_photos.append(
+    #             {"filename": path.name, "folder": "uploads", "votes": 0}
+    #         )
+    
+    imgs = db_photos
+    return render_template("gallery.html", imgs=imgs)
 
 
 @gallery_bp.route("/vote/<filename>", methods=["POST"])

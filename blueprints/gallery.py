@@ -1,35 +1,48 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, current_app
 from setup_utils.models import Photo, db
-from setup_utils.constants import UPLOAD_FOLDER
+from setup_utils.constants import UPLOAD_FOLDER, GROWTH_THRESHOLDS, STAGE_LABELS
+from pathlib import Path
 
 gallery_bp = Blueprint("gallery", __name__, url_prefix="/gallery")
 
 
 def growth_stage(votes: int) -> int:
-    if votes:
-        match votes:
-            case v if v < 3:
-                return 0
-            case v if v < 6:
-                return 1
-            case _:
-                return 2
+    stages = sorted(GROWTH_THRESHOLDS.items(), key=lambda x: x[1])
+    current_stage = 0
+    for stage, threshold in stages:
+        if votes >= threshold:
+            current_stage = stage
+    return current_stage
+    # match votes:
+    #     case v if v < 3:
+    #         return 0
+    #     case v if v < 6:
+    #         return 1
+    #     case _:
+    #         return 2
 
 
-@gallery_bp.app_template_filter("growth_stage")
+@gallery_bp.app_template_filter("growth_label")
 def growth_stage_filter(votes: int) -> int:
-    return growth_stage(votes)
+    stage = growth_stage(votes)
+    return STAGE_LABELS.get(stage, "❓ Unknown")
 
 
 @gallery_bp.route("/")
 def gallery():
     db_photos = []
     for p in Photo.query.order_by(Photo.votes.desc()).all():
-        if (UPLOAD_FOLDER / p.filename).exists():
+        upload_path = Path(current_app.root_path) / "static" / "uploads" / p.filename
+        if upload_path.exists():
             folder = "uploads"
         else:
             folder = "images"
-        db_photos.append({"filename": p.filename, "folder": folder, "votes": p.votes})
+
+        db_photos.append({
+            "filename": p.filename,
+            "folder": folder,
+            "votes": p.votes
+        })
 
     imgs = db_photos
     return render_template("gallery.html", imgs=imgs)

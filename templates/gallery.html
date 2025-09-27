@@ -4,11 +4,24 @@
 <div style="display: flex; flex-wrap: wrap; gap: 5px;">
     {% for img in imgs %}
     <div style="flex: 1 1 40%; max-width: 400px;">
-        <img src="{{ url_for('static', filename=img.folder ~ '/' ~ img.filename) }}" class="memory-photo" alt="{{ img.filename }}" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+        <img src="{{ url_for('static', filename=img.folder ~ '/' ~ img.filename) }}"
+             class="memory-photo"
+             alt="{{ img.filename }}"
+             style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+
         <p style="text-align: center; font-style: italic;">
-            {{ img.votes }}
+            Votes: {{ img.votes }}
         </p>
-        <form action="{{ url_for('gallery.vote', filename=img.filename) }}" method="post" style="text-align: center;" data-spa>
+
+        <!-- Growth stage label -->
+        <p style="text-align: center; font-weight: bold;">
+            {{ img.votes | growth_label }}
+        </p>
+
+        <form action="{{ url_for('gallery.vote', filename=img.filename) }}"
+              method="post"
+              style="text-align: center;"
+              data-spa>
             <button type="submit">Vote</button>
         </form>
     </div>

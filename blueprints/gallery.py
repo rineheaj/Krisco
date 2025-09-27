@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for
 from setup_utils.models import Photo, db
-from setup_utils.constants import UPLOAD_FOLDER, IMAGE_SUFFIXES
+from setup_utils.constants import UPLOAD_FOLDER
 
 gallery_bp = Blueprint("gallery", __name__, url_prefix="/gallery")
 

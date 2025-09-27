@@ -8,8 +8,6 @@ from setup_utils.constants import UPLOAD_FOLDER
 from blueprints import all_blueprints
 
 
-
-
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -27,9 +25,6 @@ def create_app():
     app.cli.add_command(init_db_command)
 
     return app
-
-
-
 
 
 if __name__ == "__main__":

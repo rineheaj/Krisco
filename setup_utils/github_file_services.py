@@ -1,9 +1,10 @@
 from github import Github, GithubException
 from werkzeug.utils import secure_filename
-import base64
 import os
 from datetime import datetime
 import json
+
+from setup_utils.models import cache
 
 
 def save_guestbook_github(name, message):
@@ -41,6 +42,7 @@ def save_guestbook_github(name, message):
         )
 
 
+@cache.cached(timeout=30, key_prefix="guestbook_entires")
 def read_guestbook_github():
     g = Github(os.getenv("GITHUB_TOKEN"))
     repo_name = os.getenv("GITHUB_REPO")

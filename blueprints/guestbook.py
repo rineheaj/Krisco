@@ -19,6 +19,7 @@ guestbook_bp = Blueprint("guestbook", __name__, url_prefix="/guestbook")
 GUEST_BOOK = Path(__file__).parent / "data" / "guestbook.txt"
 
 
+
 @guestbook_bp.route("/", methods=["GET", "POST"])
 def guestbook():
     if request.method == "POST":

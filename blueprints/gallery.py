@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, current_app
-from setup_utils.models import Photo, db
+from setup_utils.models import Photo, db, cache
 from setup_utils.constants import UPLOAD_FOLDER, GROWTH_THRESHOLDS, STAGE_LABELS
 from pathlib import Path
+
+
 
 gallery_bp = Blueprint("gallery", __name__, url_prefix="/gallery")
 
@@ -28,17 +30,19 @@ def growth_stage_filter(votes: int) -> int:
     return STAGE_LABELS.get(stage, "❓ Unknown")
 
 
+@cache.cached(timeout=15, key_prefix="photo_query")
+def get_photos():
+    return Photo.query.order_by(Photo.votes.desc()).all()
+
+
 @gallery_bp.route("/")
 def gallery():
     db_photos = []
     print(
-        
         f"App method path: {current_app.root_path}\nUPLOAD FOLDER PATH: {UPLOAD_FOLDER}"
-        
-        
     )
     print("=== GALLERY ROUTE START ===")
-    for p in Photo.query.order_by(Photo.votes.desc()).all():
+    for p in get_photos():
         uploads_path = Path(current_app.root_path) / "static" / "uploads" / p.filename
         images_path = Path(current_app.root_path) / "static" / "images" / p.filename
         

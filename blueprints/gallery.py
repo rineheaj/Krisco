@@ -33,14 +33,15 @@ def gallery():
     db_photos = []
     print("=== GALLERY ROUTE START ===")
     for p in Photo.query.order_by(Photo.votes.desc()).all():
-        upload_path = Path(current_app.root_path) / "static" / "uploads" / p.filename
+        uploads_path = Path(current_app.root_path) / "static" / "uploads" / p.filename
+        images_path = Path(current_app.root_path) / "static" / "images" / p.filename
         
         # Print debug info for each photo
         print(f"DB filename: {p.filename}")
-        print(f"Checking upload path: {upload_path}")
-        print(f"Exists on disk? {upload_path.exists()}")
+        print(f"Exists in uploads? {uploads_path.exists()}")
+        print(f"Exists in images? {images_path.exists()}")
         
-        if upload_path.exists():
+        if uploads_path.exists():
             folder = "uploads"
         else:
             folder = "images"

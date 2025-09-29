@@ -134,7 +134,7 @@ def save_uploaded_image_to_github(file_storage, filename=None):
     path = f"static/uploads/{filename}"
 
     file_bytes = file_storage.read()
-    encoded_content = base64.b64encode(file_bytes).decode("ascii")
+    
 
     try:
         contents = repo.get_contents(path, ref=branch)
@@ -142,7 +142,7 @@ def save_uploaded_image_to_github(file_storage, filename=None):
         repo.update_file(
             path=path,
             message=f"Update uploaded image {filename}",
-            content=encoded_content,
+            content=file_bytes,
             sha=sha,
             branch=branch,
         )
@@ -151,7 +151,7 @@ def save_uploaded_image_to_github(file_storage, filename=None):
         repo.create_file(
             path=path,
             message=f"Add uploaded image {filename}",
-            content=encoded_content,
+            content=file_bytes,
             branch=branch,
         )
     

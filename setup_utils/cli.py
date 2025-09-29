@@ -3,6 +3,8 @@ from flask.cli import with_appcontext
 from setup_utils.models import db, Photo
 from setup_utils.constants import IMAGES_FOLDER, IMAGE_SUFFIXES, UPLOAD_FOLDER
 
+import subprocess
+
 
 
 @click.command("init-db")
@@ -31,7 +33,6 @@ def count_photos_command():
 @click.argument("new_filename")
 @with_appcontext
 def rename_photo_command(old_filename, new_filename):
-    """Rename a photo's filename in the database."""
     photo = Photo.query.filter_by(filename=old_filename).first()
     if photo:
         photo.filename = new_filename
@@ -67,4 +68,27 @@ def clean_orphans_command():
             removed += 1
         db.session.commit()
         click.echo(f"🧹 Removed {removed} orphaned DB entries")
+
+@click.command("purge-photo")
+@click.argument("filename")
+@with_appcontext
+def purge_photo_command(filename):
+    if not click.confirm(f"⚠️ This will delete <{filename}> from the DB and run <git rm>\nContinue?"):
+        click.echo("❌ Aborted.")
+        return
+
+    photo = Photo.query.filter_by(filename=filename).first()
+    if photo:
+        db.session.delete(photo)
+        db.session.commit()
+        click.echo(f"🗑️ Deleted DB entry for {filename}")
+    else:
+        click.echo(f"⚠️ No DB entry found for {filename}")
+
+    try:
+        subprocess.run(["git", "rm", f"{UPLOAD_FOLDER}/{filename}"], check=True)
+        click.echo(f"✅ Ran <git rm {UPLOAD_FOLDER}/{filename}>")
+    except subprocess.CalledProcessError as e:
+        click.echo(f"❌ Git error: {e}")
+
 

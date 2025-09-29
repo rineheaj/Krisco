@@ -1,19 +1,17 @@
 from flask import Flask, render_template
 import os
-import mimetypes
 
 from setup_utils.models import db
 from setup_utils.config import Config
-from setup_utils.cli import init_db_command, count_photos_command, clean_orphans_command, delete_photo_command, rename_photo_command
+from setup_utils.cli import init_db_command, count_photos_command, clean_orphans_command, delete_photo_command, rename_photo_command, purge_photo_command
 from setup_utils.constants import UPLOAD_FOLDER
 from blueprints import all_blueprints
+
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
-    mimetypes.add_type("image/jpeg", ".jpeg")
 
     db.init_app(app)
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -31,6 +29,8 @@ def create_app():
     app.cli.add_command(rename_photo_command)
     app.cli.add_command(delete_photo_command)
     app.cli.add_command(clean_orphans_command)
+    app.cli.add_command(purge_photo_command)
+
 
     return app
 

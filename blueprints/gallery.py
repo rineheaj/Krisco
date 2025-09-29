@@ -31,21 +31,35 @@ def growth_stage_filter(votes: int) -> int:
 @gallery_bp.route("/")
 def gallery():
     db_photos = []
+    print("=== GALLERY ROUTE START ===")
     for p in Photo.query.order_by(Photo.votes.desc()).all():
         upload_path = Path(current_app.root_path) / "static" / "uploads" / p.filename
+        
+        # Print debug info for each photo
+        print(f"DB filename: {p.filename}")
+        print(f"Checking upload path: {upload_path}")
+        print(f"Exists on disk? {upload_path.exists()}")
+        
         if upload_path.exists():
             folder = "uploads"
         else:
             folder = "images"
-
+            print(f"Falling back to static/images for {p.filename}")
+        
         db_photos.append({
             "filename": p.filename,
             "folder": folder,
             "votes": p.votes
         })
-
+    
+    print("Gallery photo list (for template):")
+    for img in db_photos:
+        print(img)
+    print("=== GALLERY ROUTE END ===")
+    
     imgs = db_photos
     return render_template("gallery.html", imgs=imgs)
+
 
 
 @gallery_bp.route("/vote/<filename>", methods=["POST"])

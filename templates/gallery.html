@@ -4,11 +4,14 @@
 <div style="display: flex; flex-wrap: wrap; gap: 5px;">
     {% for img in imgs %}
     <div style="flex: 1 1 40%; max-width: 400px;">
-        <img src="{{ url_for('static', filename=img.folder ~ '/' ~ img.filename) }}"
+        <img src="{{ url_for('static', filename=img.folder + '/' + img.filename) }}"
+
              class="memory-photo"
              alt="{{ img.filename }}"
              style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
 
+        <p>Debug URL: {{ url_for('static', filename=img.folder + '/' + img.filename) }}</p>
+        
         <p style="text-align: center; font-style: italic;">
             Votes: {{ img.votes }}
         </p>

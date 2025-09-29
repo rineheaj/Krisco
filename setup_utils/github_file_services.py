@@ -134,7 +134,7 @@ def save_uploaded_image_to_github(file_storage, filename=None):
     path = f"static/uploads/{filename}"
 
     file_bytes = file_storage.read()
-    encoded_content = base64.b64encode(file_bytes).decode("utf-8")
+    encoded_content = base64.b64encode(file_bytes).decode("ascii")
 
     try:
         contents = repo.get_contents(path, ref=branch)

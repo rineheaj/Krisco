@@ -31,6 +31,12 @@ def growth_stage_filter(votes: int) -> int:
 @gallery_bp.route("/")
 def gallery():
     db_photos = []
+    print(
+        
+        f"App method path: {current_app.root_path}\nUPLOAD FOLDER PATH: {UPLOAD_FOLDER}"
+        
+        
+    )
     print("=== GALLERY ROUTE START ===")
     for p in Photo.query.order_by(Photo.votes.desc()).all():
         uploads_path = Path(current_app.root_path) / "static" / "uploads" / p.filename

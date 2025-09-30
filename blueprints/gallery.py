@@ -30,7 +30,7 @@ def growth_stage_filter(votes: int) -> int:
     return STAGE_LABELS.get(stage, "❓ Unknown")
 
 
-@cache.cached(timeout=15, key_prefix="photo_query")
+# @cache.cached(timeout=15, key_prefix="photo_query")
 def get_photos():
     return Photo.query.order_by(Photo.votes.desc()).all()
 

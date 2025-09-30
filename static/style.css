@@ -115,11 +115,43 @@ form button:hover {
     justify-content: center;
 }
 .memory-photo {
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    max-width: 100%;
-    height: auto;
+  border-radius: 12px;
+  max-width: 100%;
+  height: auto;
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(255, 223, 186, 0.6),
+    0 0 60px rgba(255, 182, 193, 0.4);
 }
+
+.memory-photo:hover {
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 1),
+    0 0 40px rgba(255, 223, 186, 0.8),
+    0 0 80px rgba(255, 182, 193, 0.6);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(255, 255, 255, 0.8),
+      0 0 30px rgba(255, 223, 186, 0.6),
+      0 0 60px rgba(255, 182, 193, 0.4);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(255, 255, 255, 1),
+      0 0 50px rgba(255, 223, 186, 0.8),
+      0 0 90px rgba(255, 182, 193, 0.6);
+  }
+}
+
+.memory-photo {
+  animation: pulseGlow 3s infinite alternate;
+}
+
+
 
 /* Guestbook entries */
 .entries {

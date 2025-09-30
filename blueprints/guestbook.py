@@ -6,6 +6,9 @@ from flask import (
     redirect,
     url_for,
 )
+from flask_login import (
+    login_required
+)
 from setup_utils.github_file_services import (
     save_guestbook_github,
     read_guestbook_github,
@@ -39,6 +42,7 @@ def sanitize_message(message: str | None) -> str | None:
 
 
 @guestbook_bp.route("/", methods=["GET", "POST"])
+@login_required
 def guestbook():
     if request.method == "POST":
         name = request.form.get("name")
@@ -50,17 +54,13 @@ def guestbook():
             with open(GUEST_BOOK, mode="a", encoding="utf-8") as outfile:
                 outfile.write(entry)
             print(f"Guestbook saved locally to {outfile}")
-            
             async_save_to_github(name, safe_message)
 
-        return redirect(url_for("guestbook.guestbook"))
-
-    # GET request part no else block needed
+    #GET request part
     entries = read_guestbook_github()
     if not entries and GUEST_BOOK.exists():
         with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:
             entries = list(reversed(infile.readlines()))
-
     formatted_entries = []
     for e in entries:
         try:
@@ -70,6 +70,12 @@ def guestbook():
         except Exception:
             continue
 
+    # 🔑 If SPA request, return updated page directly
+    if request.headers.get("X-Requested-With") == "fetch":
+        return render_template("guestbook.html", entries=formatted_entries)
+
     return render_template("guestbook.html", entries=formatted_entries)
+
+
 
 

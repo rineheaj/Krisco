@@ -10,11 +10,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
 
+            
+
             const newContent = doc.querySelector("#content");
             if (newContent) {
                 content.innerHTML = newContent.innerHTML;
                 console.log("Injected content:", newContent.innerHTML);
                 console.log("Injected node:", newContent);
+            }
+
+            const flash = document.querySelector("#flash-messages");
+            if (flash) {
+                document.querySelector("#flash-messages").innerHTML = flash.innerHTML;
             }
 
             const finalURL = res.url;

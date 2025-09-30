@@ -36,6 +36,19 @@ nav a {
 }
 nav a:hover { color: #7b4b3a; }
 
+.user-status {
+    font-size: 0.9rem;
+    margin-left: auto;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold
+}
+.user-status.logged-in {
+    color: green;
+}
+.user-status-logged-out {
+    color: red;
+}
+
 
 #guestbook-form textarea,
 #guestbook-form input[type="text"] {
@@ -149,6 +162,7 @@ button:hover, .stButton button:hover { background: #b37a66; }
 .flash-messages {
     margin: 1em auto;
     max-width: 600px;
+    text-align: center;
 }
 
 .flash {

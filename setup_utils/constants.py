@@ -15,9 +15,9 @@ GROWTH_THRESHOLDS = {
 }
 
 STAGE_LABELS = {
-    0: "🌱 Seed",
-    1: "🌿 Sprout",
-    2: "🌳 Sapling",
-    3: "🌲 Young Tree",
-    4: "🌴 Full Growth"
+    0: "🌱",
+    1: "🌿",
+    2: "🌳",
+    3: "🌲",
+    4: "🌴"
 }

@@ -37,7 +37,9 @@ def async_save_to_github(name: str, message: str):
 def sanitize_message(message: str | None) -> str | None:
     if not message:
         return None
-    return message.replace("\n", " \\n ").strip()
+    return message.replace("\r\n", " \\n ").replace("\n", " \\n ").strip()
+
+
 
 
 
@@ -47,6 +49,8 @@ def guestbook():
     if request.method == "POST":
         name = request.form.get("name")
         safe_message = sanitize_message(request.form.get("message"))
+        print(repr(request.form.get("message")))
+        print(safe_message)
 
         if name and safe_message:
             entry = f"{datetime.now().strftime('%m-%d-%Y %H:%M:%S')} | {name}: {safe_message}\n"

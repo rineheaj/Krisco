@@ -57,24 +57,38 @@ def guestbook():
             async_save_to_github(name, safe_message)
 
     #GET request part
-    entries = read_guestbook_github()
-    if not entries and GUEST_BOOK.exists():
-        with open(GUEST_BOOK, mode="r", encoding="utf-8") as infile:
-            entries = list(reversed(infile.readlines()))
-    formatted_entries = []
+    try:
+        if GUEST_BOOK.exists():
+            with open(GUEST_BOOK, "r", encoding="utf-8") as infile:
+                entries = list(reversed(infile.readlines()))
+        else:
+            entries = read_guestbook_github()
+    except Exception as e:
+        print(f"Error reading guestbook: {e}")
+        entries = []
+    
+    formed_entries = []
     for e in entries:
         try:
-            target_name = e.split(" | ")[1].split(":")[0].strip()
-            target_message = e.split(" | ")[1].split(":")[1].strip()
-            formatted_entries.append({"name": target_name, "message": target_message})
-        except Exception:
+            timestamp, rest = e.split(" | ", 1)
+            target_name, target_message = rest.split(":", 1)
+            formed_entries.append(
+                {
+                    "name": target_name.strip(),
+                    "message": target_message.strip()
+                }
+            )
+        except ValueError as e:
+            print(f"Error formatting entries: {e}")
             continue
+
+
 
     # 🔑 If SPA request, return updated page directly
     if request.headers.get("X-Requested-With") == "fetch":
-        return render_template("guestbook.html", entries=formatted_entries)
+        return render_template("guestbook.html", entries=formed_entries)
 
-    return render_template("guestbook.html", entries=formatted_entries)
+    return render_template("guestbook.html", entries=formed_entries)
 
 
 

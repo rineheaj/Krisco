@@ -14,10 +14,13 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pygithub>=2.8.1",
     "streamlit>=1.49.1",
+    "textual>=6.2.0",
+    "textual-dev>=1.7.0",
 ]
 
 [tool.uv.workspace]
 members = [
     "Krisco_mon",
     "mini_obsidian",
+    "test_scripts/python/tuis_with_text",
 ]

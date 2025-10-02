@@ -98,17 +98,19 @@ def purge_photo_command(filename):
         click.echo(f"❌ Git error: {e}")
 
 
+
+
 # USERSTUFF
 @click.command("create-user")
 @with_appcontext
 def create_user_command():
     username = click.prompt("Enter a username")
-
-    while (password := getpass.getpass("Enter a password: ")) != (
-        confirm := getpass.getpass("Confirm password: ")
-    ) or not password:
+    while True:
+        password = getpass.getpass("Enter a password: ")
+        confirm = getpass.getpass("Confirm password: ")
+        if password == confirm and password:
+            break
         click.echo("⚠️ Passwords do not match or are empty. Try again")
-    print(f"✅ Passwords match adding {username} to the DB.")
 
     if User.query.filter_by(username=username).first():
         click.echo(f"⚠️ User '{username}' already exists.")

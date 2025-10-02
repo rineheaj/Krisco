@@ -3,8 +3,6 @@ from flask import (
     Blueprint,
     render_template,
     request,
-    redirect,
-    url_for,
 )
 from flask_login import (
     login_required
@@ -43,6 +41,7 @@ def sanitize_message(message: str | None) -> str | None:
 
 
 
+
 @guestbook_bp.route("/", methods=["GET", "POST"])
 @login_required
 def guestbook():
@@ -76,10 +75,14 @@ def guestbook():
         try:
             timestamp, rest = e.split(" | ", 1)
             target_name, target_message = rest.split(":", 1)
+            
+            clean_message = target_message.strip().replace("\\n", "<br>")
+            
+
             formed_entries.append(
                 {
                     "name": target_name.strip(),
-                    "message": target_message.strip()
+                    "message": clean_message
                 }
             )
         except ValueError as e:

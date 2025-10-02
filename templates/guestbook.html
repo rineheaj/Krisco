@@ -18,7 +18,7 @@
         {% for entry in entries %}
             <div class="entry">
                 <strong>{{ entry.name }}</strong>
-                <p class="message">{{ entry.message }}</p>
+                <p class="message">{{ entry.message | safe }}</p>
             </div>
         {% endfor %}
     </div>

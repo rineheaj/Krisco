@@ -6,10 +6,18 @@ function onYouTubeIframeAPIReady() {
     events: {
       onReady: () => {
         playerReady = true;
+
+        const muteBtn = document.getElementById("muteBtn");
+        if (player.isMuted()) {
+          muteBtn.textContent = "🔇";
+        } else {
+          muteBtn.textContent = "🔊";
+        }
       }
     }
   });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const playBtn = document.getElementById("playBtn");

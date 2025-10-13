@@ -23,4 +23,5 @@ members = [
     "Krisco_mon",
     "mini_obsidian",
     "test_scripts/python/tuis_with_text",
+    "test_scripts/python/top_ss",
 ]
